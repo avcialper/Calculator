@@ -20,7 +20,7 @@ abstract class AppDatabase : RoomDatabase() {
                     _instance = Room.databaseBuilder(
                         context = context,
                         klass = AppDatabase::class.java,
-                        name = "history"
+                        name = "history.sqlite"
                     ).build()
                 }
             }

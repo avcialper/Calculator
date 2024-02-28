@@ -6,4 +6,6 @@
     <color name="button_operands">#323232</color>
     <color name="button_result">#EF6934</color>
     <color name="result_text">#989797</color>
+    <color name="input_text">#424040</color>
+    <color name="card_background">#232323</color>
 </resources>
