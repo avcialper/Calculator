@@ -6,16 +6,23 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.avcialper.calculator.databinding.ActivityMainBinding
+import com.avcialper.calculator.room.AppDatabase
+import com.avcialper.calculator.room.History
+import com.avcialper.calculator.room.HistoryDao
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import net.objecthunter.exp4j.ExpressionBuilder
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    // To show the formula to the user
     private var inputVal = ""
-    // To calculate the formula
-    private var calculateVal = ""
+    private lateinit var db: AppDatabase
+    private lateinit var dao: HistoryDao
+    private var historyList: List<History> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,14 +30,18 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         window.statusBarColor = Color.TRANSPARENT
+
+        db = AppDatabase.databaseConnect(this)!!
+        dao = db.getDao()
     }
 
     private fun calculateResult() {
         try {
+            val calculateVal = inputVal.replace("√", "sqrt")
             val expressionBuilder = ExpressionBuilder(calculateVal).build()
             val result = expressionBuilder.evaluate()
-
             val longResult = result.toLong()
+
             if (result == longResult.toDouble()) {
                 binding.result.text = longResult.toString()
             } else {
@@ -42,10 +53,17 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun getHistory() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            dao.getAll().collect {
+                historyList = it
+            }
+        }
+    }
+
     fun onNumberButtonClick(view: View) {
         val button = view as Button
         inputVal += button.text
-        calculateVal += button.text
         binding.input.text = inputVal
         calculateResult()
     }
@@ -54,26 +72,19 @@ class MainActivity : AppCompatActivity() {
         if (inputVal.isNotEmpty()) {
             if (inputVal.length == 1) {
                 inputVal = ""
-                calculateVal = ""
             } else if (inputVal.substring(inputVal.lastIndex - 1) == "√(") {
                 inputVal = inputVal.substring(0, inputVal.lastIndex - 1)
-                calculateVal = calculateVal.substring(0, calculateVal.lastIndex - 4)
             } else {
                 inputVal = inputVal.substring(0, inputVal.lastIndex)
-                calculateVal = calculateVal.substring(0, calculateVal.lastIndex)
             }
             binding.input.text = inputVal
         }
-        if (inputVal.isNotEmpty())
-            calculateResult()
-        else
-            binding.result.text = ""
+        calculateResult()
     }
 
     fun clearAll(view: View) {
-        if (inputVal != "") {
+        if (inputVal.isNotEmpty()) {
             inputVal = ""
-            calculateVal = ""
             binding.apply {
                 input.text = ""
                 result.text = ""
@@ -86,22 +97,18 @@ class MainActivity : AppCompatActivity() {
         val operand = button.text
         if (inputVal.isEmpty() && operand == "√") {
             inputVal = "√("
-            calculateVal = "sqrt("
         } else if (inputVal.isNotEmpty() && (inputVal[inputVal.lastIndex].isDigit() || inputVal[inputVal.lastIndex] == ')')) {
             when (operand) {
                 "√" -> {
                     inputVal += "√("
-                    calculateVal += "sqrt("
                 }
 
                 "x" -> {
                     inputVal += operand
-                    calculateVal += "*"
                 }
 
                 else -> {
                     inputVal += operand
-                    calculateVal += operand
                 }
             }
         }
@@ -115,17 +122,13 @@ class MainActivity : AppCompatActivity() {
         if (operand == ")" && inputVal.isNotEmpty()) {
             if (inputVal[inputVal.lastIndex] == '(') {
                 inputVal = inputVal.substring(0, inputVal.lastIndex)
-                calculateVal = calculateVal.substring(0, calculateVal.lastIndex)
             } else {
                 inputVal += operand
-                calculateVal += operand
             }
         } else if (inputVal.isEmpty() && operand == ")") {
             inputVal = ""
-            calculateVal = ""
         } else {
             inputVal += operand
-            calculateVal += operand
         }
         binding.input.text = inputVal
         calculateResult()
@@ -134,11 +137,9 @@ class MainActivity : AppCompatActivity() {
     fun onDotClick(view: View) {
         if (inputVal.isEmpty()) {
             inputVal = "0"
-            calculateVal = "0"
         }
         if (inputVal[inputVal.lastIndex] != '.' && inputVal[inputVal.lastIndex].isDigit()) {
             inputVal += "."
-            calculateVal += "."
             binding.input.text = inputVal
         }
     }
@@ -147,7 +148,6 @@ class MainActivity : AppCompatActivity() {
         binding.apply {
             if (result.text.toString().isNotEmpty()) {
                 inputVal = binding.result.text.toString()
-                calculateVal = inputVal
                 input.text = inputVal
                 result.text = ""
             }
