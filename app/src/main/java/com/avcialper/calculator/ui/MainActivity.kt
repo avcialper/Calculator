@@ -52,12 +52,16 @@ class MainActivity : AppCompatActivity() {
                 if (!isHistoryOpen) {
                     getHistory()
                     isHistoryOpen = true
+                    historyProvider.visibility = View.VISIBLE
+                } else {
+                    isHistoryOpen = false
+                    historyProvider.visibility = View.GONE
                 }
             }
 
             historyRV.setHasFixedSize(true)
             historyRV.layoutManager = LinearLayoutManager(this@MainActivity)
-            adapter = HistoryAdapter(historyList)
+            adapter = HistoryAdapter(historyList, viewModel)
             historyRV.adapter = adapter
         }
     }
@@ -73,7 +77,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateAdapter() {
-        adapter = HistoryAdapter(historyList)
+        adapter = HistoryAdapter(historyList, viewModel)
         binding.historyRV.adapter = adapter
     }
 

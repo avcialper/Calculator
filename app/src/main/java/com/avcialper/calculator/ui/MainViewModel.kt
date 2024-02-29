@@ -29,6 +29,10 @@ class MainViewModel @Inject constructor(private val repository: Repository) : Vi
         }
     }
 
+    fun setInput(data: String) {
+        _input.value = data
+    }
+
     private fun calculateResult() {
         _result.value = repository.calculateResult(_input.value.toString())
     }

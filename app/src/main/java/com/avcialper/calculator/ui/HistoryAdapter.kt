@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.avcialper.calculator.databinding.HistoryCardBinding
 import com.avcialper.calculator.room.History
 
-class HistoryAdapter(private val historyList: List<History>) :
+class HistoryAdapter(private val historyList: List<History>, private val viewModel: MainViewModel) :
     RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
 
     class ViewHolder(val binding: HistoryCardBinding) : RecyclerView.ViewHolder(binding.root)
@@ -22,6 +22,10 @@ class HistoryAdapter(private val historyList: List<History>) :
         holder.binding.apply {
             inputRv.text = history.input
             resultRv.text = history.result
+
+            root.setOnClickListener {
+                viewModel.setInput(history.result)
+            }
         }
     }
 

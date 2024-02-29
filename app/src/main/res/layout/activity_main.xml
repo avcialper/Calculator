@@ -323,12 +323,27 @@
             android:text="@string/calculate" />
     </GridLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/historyRV"
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/historyProvider"
+        android:layout_width="1dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@id/button_layout"
+        android:background="@color/black"
+        android:paddingBottom="8dp"
+        android:paddingTop="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/button_layout"
-        app:layout_constraintWidth_percent="0.5" />
+        app:layout_constraintWidth_percent="0.6">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/historyRV"
+            android:background="@color/black"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
