@@ -29,6 +29,10 @@ class MainViewModel @Inject constructor(private val repository: Repository) : Vi
         }
     }
 
+    suspend fun clearHistory() {
+        repository.clearHistory()
+    }
+
     fun setInput(data: String) {
         _input.value = data
     }
@@ -73,8 +77,10 @@ class MainViewModel @Inject constructor(private val repository: Repository) : Vi
 
     fun onResult() {
         val response = repository.onResult(_input.value.toString(), _result.value.toString())
-        _input.value = response
-        _result.value = ""
+        if (response) {
+            _input.value = _result.value
+            _result.value = ""
+        }
     }
 
 }

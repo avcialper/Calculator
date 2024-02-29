@@ -24,4 +24,5 @@
     <string name="dot">.</string>
     <string name="calculate">=</string>
     <string name="history_button">History button</string>
+    <string name="clear_button">Clear button</string>
 </resources>

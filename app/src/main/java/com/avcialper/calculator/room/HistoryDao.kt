@@ -10,7 +10,11 @@ interface HistoryDao {
 
     @Query("SELECT * FROM history")
     suspend fun getAll(): List<History>
+
     @Insert
     suspend fun addValue(history: History)
+
+    @Query("DELETE FROM history")
+    suspend fun delete()
 
 }

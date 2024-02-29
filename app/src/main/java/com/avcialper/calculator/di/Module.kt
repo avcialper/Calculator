@@ -13,9 +13,16 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 @Module
 object Module {
+
     @Singleton
     @Provides
-    fun provideDao(@ApplicationContext context: Context) : HistoryDao {
-        return AppDatabase.databaseConnect(context)!!.getDao()
+    fun provideDatabase(@ApplicationContext context: Context): AppDatabase {
+        return AppDatabase.databaseConnect(context)!!
+    }
+
+    @Singleton
+    @Provides
+    fun provideDao(appDatabase: AppDatabase): HistoryDao {
+        return appDatabase.getDao()
     }
 }

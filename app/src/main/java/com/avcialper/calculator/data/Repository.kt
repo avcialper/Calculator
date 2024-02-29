@@ -1,6 +1,7 @@
 package com.avcialper.calculator.data
 
 import android.util.Log
+import com.avcialper.calculator.room.AppDatabase
 import com.avcialper.calculator.room.History
 import com.avcialper.calculator.room.HistoryDao
 import kotlinx.coroutines.CoroutineScope
@@ -13,8 +14,12 @@ import javax.inject.Singleton
 @Singleton
 class Repository @Inject constructor(private val dao: HistoryDao) {
 
-    suspend fun getHistoryList():  List<History> {
+    suspend fun getHistoryList(): List<History> {
         return dao.getAll()
+    }
+
+    suspend fun clearHistory() {
+        dao.delete()
     }
 
     fun calculateResult(input: String): String? {
@@ -99,16 +104,15 @@ class Repository @Inject constructor(private val dao: HistoryDao) {
         return currentData
     }
 
-    fun onResult(input: String, data: String?): String {
-        var currentData = input
-        if (!data.isNullOrEmpty()) {
+    fun onResult(input: String, result: String): Boolean {
+        if (result.isNotEmpty()) {
             CoroutineScope(Dispatchers.IO).launch {
-                val newHistory = History(0, input, data)
+                val newHistory = History(0, input, result)
                 dao.addValue(newHistory)
             }
-            currentData = data
+            return true
         }
-        return currentData
+        return false
     }
 
 }

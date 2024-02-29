@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
+
+    <Transition
+        motion:constraintSetEnd="@+id/end"
+        motion:constraintSetStart="@id/start"
+        motion:duration="500">
+       <KeyFrameSet>
+           <KeyAttribute
+               motion:motionTarget="@+id/history" />
+           <KeyAttribute
+               motion:motionTarget="@+id/history"
+               android:rotation="90"
+               motion:framePosition="100" />
+           <KeyAttribute
+               motion:motionTarget="@+id/history"
+               motion:framePosition="25"
+               android:alpha="0.1" />
+           <KeyAttribute
+               motion:motionTarget="@+id/clear"
+               motion:framePosition="0"
+               android:alpha="0" />
+       </KeyFrameSet>
+    </Transition>
+
+    <ConstraintSet android:id="@+id/start">
+        <Constraint
+            android:id="@+id/clear"
+            motion:layout_constraintEnd_toStartOf="@id/history"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            motion:layout_constraintTop_toTopOf="parent"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="16dp" />
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/end">
+        <Constraint
+            android:id="@+id/historyProvider"
+            motion:layout_constraintWidth_percent="0.6"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintTop_toTopOf="@id/button_layout"
+            motion:layout_constraintStart_toStartOf="parent" />
+        <Constraint
+            android:id="@+id/history"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            motion:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp" />
+        <Constraint
+            android:id="@+id/clear"
+            motion:layout_constraintEnd_toStartOf="@id/history"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            motion:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp" />
+    </ConstraintSet>
+</MotionScene>
