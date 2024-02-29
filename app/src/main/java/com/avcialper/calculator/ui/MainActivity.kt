@@ -1,9 +1,7 @@
 package com.avcialper.calculator.ui
 
 import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
@@ -55,9 +53,19 @@ class MainActivity : AppCompatActivity() {
                 viewModel.onResult()
             }
 
+            viewModel.history.observeForever {
+                historyList = it
+                updateAdapter()
+                if (isHistoryOpen && historyList.isEmpty()) {
+                    motionLayout.transitionToStart()
+                    history.setImageResource(R.drawable.history)
+                    Toast.makeText(this@MainActivity, "No history", Toast.LENGTH_LONG).show()
+                    isHistoryOpen = false
+                }
+            }
+
             history.setOnClickListener {
                 isHistoryOpen = if (!isHistoryOpen) {
-                    // TODO is the history empty
                     getHistory()
                     motionLayout.transitionToEnd()
                     history.setImageResource(R.drawable.close)
@@ -84,10 +92,6 @@ class MainActivity : AppCompatActivity() {
     private fun getHistory() {
         lifecycleScope.launch(Dispatchers.Main) {
             viewModel.getHistoryList()
-            viewModel.history.observe(this@MainActivity) {
-                historyList = it
-                updateAdapter()
-            }
         }
     }
 

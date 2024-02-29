@@ -33,8 +33,9 @@ class MainViewModel @Inject constructor(private val repository: Repository) : Vi
         repository.clearHistory()
     }
 
-    fun setInput(data: String) {
+    fun changeInput(data: String) {
         _input.value = data
+        _result.value = ""
     }
 
     private fun calculateResult() {

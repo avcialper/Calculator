@@ -24,7 +24,7 @@ class HistoryAdapter(private val historyList: List<History>, private val viewMod
             resultRv.text = history.result
 
             root.setOnClickListener {
-                viewModel.setInput(history.result)
+                viewModel.changeInput(history.result)
             }
         }
     }
