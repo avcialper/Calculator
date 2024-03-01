@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        window.statusBarColor = Color.TRANSPARENT
+        window.statusBarColor = Color.BLACK
         initUI()
     }
 
@@ -56,11 +56,15 @@ class MainActivity : AppCompatActivity() {
             viewModel.history.observeForever {
                 historyList = it
                 updateAdapter()
-                if (isHistoryOpen && historyList.isEmpty()) {
+                isHistoryOpen = if (isHistoryOpen && historyList.isEmpty()) {
                     motionLayout.transitionToStart()
                     history.setImageResource(R.drawable.history)
                     Toast.makeText(this@MainActivity, "No history", Toast.LENGTH_LONG).show()
-                    isHistoryOpen = false
+                    false
+                } else {
+                    motionLayout.transitionToEnd()
+                    history.setImageResource(R.drawable.close)
+                    true
                 }
             }
 
