@@ -9,7 +9,7 @@ Packages Used
 - Object Hunter
   <br>
 
-<video controls src="assets/calculator.mp4" title="CALCULATOR"></video>
+https://github.com/avcialper/Calculator/assets/90919011/609683b8-ee7e-4def-8df8-1006a8126d50
 
 <p align="center">
   <a href="app/release/calculator.apk">Download APK</a>
